@@ -1,6 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
+from rest_framework.status import HTTP_204_NO_CONTENT
 from .models import Category
 from .serializers import CategorySerializer
 
@@ -16,7 +17,7 @@ def all_categories(request):
             return Response({ "Res" : serializer.data })
 
 
-@api_view(["GET", "PUT"])
+@api_view(["GET", "PUT", "DELETE"])
 def category(request, pk):
     try:
         category = Category.objects.get(pk=pk)
@@ -31,6 +32,9 @@ def category(request, pk):
         if serializer.is_valid():
             serializer.save()
             return Response({ "Res" : serializer.data })
+    elif request.method == "DELETE":
+        category.delete()
+        return Response(status=HTTP_204_NO_CONTENT)
 
 def create(self, validated_data):
     return Category.objects.create(**validated_data)
