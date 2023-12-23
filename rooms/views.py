@@ -6,30 +6,14 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_204_NO_CONTENT
 
 from .models import Room, Amenity
-from .serializers import AmenitySerializer
+from .serializers import RoomSerializer, AmenitySerializer
 
+class Rooms(APIView):
 
-def see_all_rooms(request):
-    rooms = Room.objects.all()
-    return render(request, "all_rooms.html", {
-                      'rooms': rooms,
-                      'title': "Hello! this title comes from django!",
-                  })
+    def get(self, request):
+        all_rooms = Room.objects.all()
+        return Response(RoomSerializer(all_rooms, many=True).data)
 
-def see_one_room(request, room_id):
-  try:
-    room = Room.objects.get(pk=room_id)
-    return render(request, "room_detail.html",
-                  {
-                    'room': room,
-                  },
-                 )
-  except Room.DoesNotExist:
-    return render(request, "room_detail.html",
-                  {
-                    "not_found": True,
-                  },
-                 )
 
 class Amenities(APIView):
     def get(self, request):
@@ -44,6 +28,7 @@ class Amenities(APIView):
             return Response(AmenitySerializer(new_amenity).data)
         else:
             return Response(serializer.errors)
+
 
 class AmenityDetail(APIView):
 
