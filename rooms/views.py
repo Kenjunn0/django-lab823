@@ -70,4 +70,4 @@ class AmenityDetail(APIView):
 
     def delete(self, request, pk):
         self.get_object(pk).delete()
-        return Response(HTTP_204_NO_CONTENT)
+        return Response(status=HTTP_204_NO_CONTENT)
