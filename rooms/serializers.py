@@ -14,7 +14,7 @@ class RoomDetailSerializer(ModelSerializer):
 
     owner = TinyUserSerializer(read_only=True)
     amenities = AmenitySerializer(many=True, read_only=True)
-    category = CategorySerializer(many=True, read_only=True)
+    category = CategorySerializer(read_only=True)
 
     class Meta:
         model = Room
@@ -25,7 +25,7 @@ class RoomListSerializer(ModelSerializer):
     class Meta:
         model = Room
         fields = (
-            "id",
+            "pk",
             "name",
             "country",
             "city",
