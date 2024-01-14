@@ -4,6 +4,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_204_NO_CONTENT
 
+from django.conf import settings
+
 from .models import Room, Amenity
 from categories.models import Category
 from reviews.models import Review
@@ -124,13 +126,16 @@ class RoomReviews(APIView):
         except ValueError:
             page = 1
         room = self.get_object(pk)
-        page_size = 3
+        page_size = settings.PAGE_SIZE
         start = (page - 1) * page_size
         end = start + page_size
         serializer = ReviewSerializer(room.reviews.all()[start, end], many=True)
         return Response(serializer.data)
 
+class RoomPhotos(APIView):
 
+    def post(self, request, pk):
+        pass
 
 class Amenities(APIView):
     def get(self, request):
