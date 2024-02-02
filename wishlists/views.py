@@ -39,7 +39,7 @@ class WishlistDetail(APIView):
 
     def get(self, request, pk):
         wishlist = self.get_object(pk, request.user)
-        serializer = WishlistSerializer(Wishlist)
+        serializer = WishlistSerializer(wishlist, context={"request": request})
         return Response(serializer.data)
 
 
@@ -70,7 +70,7 @@ class WishlistRoomList(APIView):
 
     def get_room(self, room_pk):
         try:
-            return Room.objects.get(pk=pk)
+            return Room.objects.get(pk=room_pk)
         except Room.DoesNotExist:
             raise NotFound
 
@@ -79,5 +79,8 @@ class WishlistRoomList(APIView):
         room = self.get_room(room_pk)
         if wishlist.rooms.filter(pk=room.pk).exists():
             wishlist.rooms.remove(room)
+            return Response(HTTP_204_NO_CONTENT)
         else:
             wishlist.rooms.add(room)
+            updated_serializer = WishlistSerializer(wishlist, context={"request": request})
+            return Response(updated_serializer.data)
