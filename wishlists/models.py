@@ -1,7 +1,7 @@
 from django.db import models
 from common.models import CommonModel
 
-class WishList(CommonModel):
+class Wishlist(CommonModel):
 
     """ WishList Model Definition """
 
