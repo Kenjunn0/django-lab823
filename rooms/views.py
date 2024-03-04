@@ -14,7 +14,7 @@ from bookings.models import Booking
 from reviews.serializers import ReviewSerializer
 from .serializers import RoomListSerializer, RoomDetailSerializer, AmenitySerializer
 from medias.serializers import PhotoSerializer
-from bookings.serializers import PublicBookingSerializer
+from bookings.serializers import PublicBookingSerializer, CreateRoomBookingSerializer
 
 class Rooms(APIView):
 
@@ -230,3 +230,11 @@ class RoomBookings(APIView):
         bookings = Booking.objects.filter(room=room, kind=Booking.BookingKindChoices.ROOM, check_in__gt=now)
         serializer = PublicBookingSerializer(bookings, many=True)
         return Response(serializer.data)
+
+    def post(self, request, pk):
+        room = self.get_object(pk)
+        serializer = CreateRoomBookingSerializer(data=request.data)
+        if serializer.is_valid():
+            pass
+        else:
+            return Response(serializer.errors)

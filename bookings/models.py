@@ -13,8 +13,8 @@ class Booking(CommonModel):
     user = models.ForeignKey("users.User", on_delete=models.CASCADE, related_name="bookings", )
     room = models.ForeignKey("rooms.Room", on_delete=models.CASCADE, null=True, blank=True, related_name="bookings", )
     experience = models.ForeignKey("experiences.Experience", on_delete=models.CASCADE, null=True, blank=True, related_name="bookings", )
-    check_in = models.DateField()
-    check_out = models.DateField()
+    check_in = models.DateField(null=True, blank=True, )
+    check_out = models.DateField(null=True, blank=True, )
     experience_time = models.DateTimeField(null=True, blank=True, )
     guest = models.PositiveIntegerField()
 
