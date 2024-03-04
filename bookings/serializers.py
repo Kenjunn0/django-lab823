@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import serializers
 from .models import Booking
 
@@ -26,3 +27,15 @@ class CreateRoomBookingSerializer(serializers.ModelSerializer):
             "check_out",
             "guest"
         )
+
+    def validate_check_in(self, value):
+        now = timezone.localtime(timezone.now()).date()
+        if now > value:
+            raise serializers.ValidationError("Can't book in the past")
+        return value
+
+    def validate_check_out(self, value):
+        now = timezone.localtime(timezone.now()).date()
+        if now > value:
+            raise serializers.ValidationError("Can't book in the past")
+        return value
