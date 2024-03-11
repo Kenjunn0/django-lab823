@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from rest_framework import status
 from rest_framework import exceptions
 from . import serializers
+from .models import User as USER
 
 class Me(APIView):
 
@@ -29,7 +30,7 @@ class Me(APIView):
             return Response(serializer.errors)
 
 
-class User(APIView):
+class Users(APIView):
 
     def post(self, request):
         password = request.data.get['password']
@@ -48,6 +49,35 @@ class User(APIView):
             return Response(serializer.errors)
 
 
+class PublicUser(APIView):
+
+    def get_user(self, username):
+        try:
+            user = USER.objects.get(username=username)
+            return user
+        except USER.DoesNotExist:
+            raise exceptions.NotFound
+
+    def get(self, request, username):
+        user = self.get_user(username)
+        serializer = serializers.PrivateUserSerializer(user)
+        return Response(serializer.data)
 
 
 
+class ChangePassword(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        user = request.user
+        old_password = request.data.get('old_password')
+        new_password = request.data.get('new_password')
+        if not old_password or new_password:
+            raise exceptions.ParseError
+        if user.check_password(old_password):
+            user.set_password(new_password)
+            user.save()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
