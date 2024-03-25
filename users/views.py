@@ -129,7 +129,7 @@ class JWTLogIn(APIView):
             token = jwt.encode(
                 {"pk": user.pk},
                 settings.SECRET_KEY,
-                algorithm="HS256",
+                algorithm=["HS256"],
             )
             return Response({"token": token})
         else:
