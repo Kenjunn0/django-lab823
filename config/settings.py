@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "rest_framework.authtoken",
     "strawberry.django",
 ]
 
@@ -155,5 +156,6 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
         'config.authentication.TrustMeBroAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ]
 }
