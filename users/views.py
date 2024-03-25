@@ -1,9 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
+from config import settings
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework import status
 from rest_framework import exceptions
+import jwt
 from . import serializers
 from .models import User as USER
 
@@ -109,3 +111,26 @@ class LogOut(APIView):
     def post(self, request):
         logout(request)
         return Response({"ok" : "bye!"})
+
+
+class JWTLogIn(APIView):
+
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        if not (username or password):
+            raise exceptions.ParseError
+        user = authenticate(
+            request,
+            username=username,
+            password=password,
+        )
+        if user:
+            token = jwt.encode(
+                {"pk": user.pk},
+                settings.SECRET_KEY,
+                algorithm="HS256",
+            )
+            return Response({"token": token})
+        else:
+            return Response({"error": "wrong password"})
