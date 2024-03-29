@@ -51,3 +51,39 @@ class TestAmenities(APITestCase):
         self.assertEquals(response.status_code, 400, "status_code isn't 400, It should be 400")
         self.assertIn("name", data)
 
+
+class TestAmenity(APITestCase):
+
+    NAME = "Test Amenity"
+    DESCRIPTION = "Test Dsc"
+    URL = "/api/v1/rooms/amenities"
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+
+        models.Amenity.objects.create(
+            name=self.NAME,
+            description=self.DESCRIPTION
+        )
+
+    def test_amenity_not_found(self):
+        response = self.client.get(f"{self.URL}/2")
+        self.assertEquals(response.status_code, 404)
+
+    def test_get_amenity(self):
+        response = self.client.get(f"{self.URL}/1")
+        self.assertEquals(response.status_code, 200)
+
+        data = response.json()
+        self.assertEquals(data["name"], self.NAME)
+        self.assertEquals(data["description"], self.DESCRIPTION)
+
+
+    def test_put_amenity(self):
+        pass
+
+    def test_delete_amenity(self):
+        response = self.client.delete(f"{self.URL}/1")
+        self.assertEquals(response.status_code, 204)
