@@ -87,3 +87,26 @@ class TestAmenity(APITestCase):
     def test_delete_amenity(self):
         response = self.client.delete(f"{self.URL}/1")
         self.assertEquals(response.status_code, 204)
+
+class TestRooms(APITestCase):
+
+    URL = "/api/v1/rooms/"
+
+    def setUp(self):
+        user = User.objects.create(
+            username="test"
+        )
+        user.set_password("123")
+        user.save()
+        self.user = user
+
+    def test_create_room(self):
+
+        response = self.client.post(self.URL)
+        self.assertEquals(response.status_code, 403)
+
+        # self.client.login(username="test", password="123",)
+        self.client.force_login(self.user)
+
+        response = self.client.post(self.URL)
+        self.assertEquals(response.status_code, 400)
