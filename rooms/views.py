@@ -112,12 +112,12 @@ class RoomDetail(APIView):
 
 class RoomReviews(APIView):
 
-    parser_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_object(self, pk):
         try:
-            return Review.objects.get(pk=pk)
-        except Review.DoesNotExist:
+            return Room.objects.get(pk=pk)
+        except Room.DoesNotExist:
             raise NotFound
 
     def get(self, request, pk):
@@ -129,7 +129,7 @@ class RoomReviews(APIView):
         page_size = settings.PAGE_SIZE
         start = (page - 1) * page_size
         end = start + page_size
-        serializer = ReviewSerializer(room.reviews.all()[start, end], many=True)
+        serializer = ReviewSerializer(room.reviews.all()[start:end], many=True)
         return Response(serializer.data)
 
     def post(self, request, pk):
