@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+import requests
 from config import settings
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -139,3 +140,9 @@ class GithubLogIn(APIView):
 
     def post(self, request):
         code = request.data.get("code")
+        access_token = requests.post(f"https://github.com/login/oauth/access_token?code={code}&client_id=7a2d6e687ddb017273ff&client_secret={settings.GH_SECRET}",
+                                     headers={"Accept" : "application/json"})
+        access_token = access_token.json().get("access_token")
+        user_data = requests.get(("https://api.github.com/user"),
+                                 headers={"Authorization" : f"Bearer {access_token}", "Accept" : "application/json"})
+        print(user_data.json())
