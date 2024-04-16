@@ -7,4 +7,4 @@ class CategoryViewSet(ModelViewSet):
     """Category Viewset Definition"""
 
     serializer_class = CategorySerializer
-    queryset = Category.objects.all()
+    queryset = Category.objects.filter(kind=Category.CategoryKindChoices.ROOMS,)
