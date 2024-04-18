@@ -27,6 +27,8 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 SECRET_KEY = env("SECRET_KEY")
+CF_ID = env("CF_ID")
+CF_TOKEN = env("CF_TOKEN")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
