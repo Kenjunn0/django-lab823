@@ -187,16 +187,14 @@ REST_FRAMEWORK = {
     ]
 }
 
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:3000",
-]
+if DEBUG:
+    CORS_ALLOWED_ORIGINS = ["http://127.0.0.1:3000",]
+    CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:3000", ]
+else:
+    CORS_ALLOWED_ORIGINS = ["https://djangolab-front.onrender.com", ]
+    CSRF_TRUSTED_ORIGINS = ["https://djangolab-front.onrender.com", ]
 
 CORS_ALLOW_CREDENTIALS = True
-
-CSRF_TRUSTED_ORIGINS = [
-    "http://127.0.0.1:3000",
-]
-
 GH_SECRET = env("GH_SECRET")
 
 if not DEBUG:
